@@ -1,0 +1,12 @@
+numpy
+jsonlines
+openai
+beautifulsoup4
+requests
+tqdm
+lxml
+chardet
+tiktoken
+langchain
+bs4
+python-dotenv
