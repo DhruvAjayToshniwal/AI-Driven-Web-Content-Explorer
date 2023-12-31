@@ -22,7 +22,7 @@ Creates and manages a vector database. It processes text data into embeddings us
 
 ### `main.py`
 
-The main interface for user interaction. It utilizes processed data to find contextually relevant information and leverages OpenAI's GPT-3.5 Turbo to generate responses to user queries.
+The main script for the project. It initiates an interactive conversational interface where users can ask questions, and the system provides context-aware responses. This script maintains a conversation history, allowing for more relevant and coherent responses in ongoing interactions.
 
 ### `cleanup.sh`
 
