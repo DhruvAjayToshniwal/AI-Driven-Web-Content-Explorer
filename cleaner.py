@@ -1,12 +1,3 @@
-# open vscode through anaconda
-## pip install bs4
-#  wget -r -np -nd -A.html,.txt,.tmp -P websites https://your-website # download the website
-# install beautifulsoup4
-# configure path to the directory where the files are stored
-# run the script
-
-
-
 import os
 from bs4 import BeautifulSoup
 import chardet
