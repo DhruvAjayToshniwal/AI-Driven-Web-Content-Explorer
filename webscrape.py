@@ -1,8 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse, parse_qs, urljoin
+from urllib.parse import urlparse, parse_qs
+import sys
 
-def get_top_urls(query, num_results=10):
+def get_top_urls(query, num_results=5):
     # Google search URL (Update as needed)
     search_url = "https://www.google.com/search"
     params = {"q": query}
@@ -42,6 +43,12 @@ def save_urls_to_file(urls, filename="urls.txt"):
             file.write(url + "\n")
 
 if __name__ == "__main__":
-    query = input("Enter your search query: ")
+    query = input("Enter your query (or type 'exit' to quit): ")
+    if query.lower() == 'exit':
+        sys.exit()
     top_urls = get_top_urls(query)
     save_urls_to_file(top_urls)
+
+    # Save the search query to a file
+    with open('last_query.txt', 'w') as f:
+        f.write(query)

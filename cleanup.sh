@@ -1,8 +1,9 @@
 echo "Deleting downloaded files and directory..."
 
-dir="websites"
-rm -rf "$dir"
+rm -rf websites
+rm -rf __pycache__
 rm -f train.jsonl
 rm -f urls.txt
+rm -f last_query.txt
 
 echo "Cleanup completed."
