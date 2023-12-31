@@ -38,7 +38,7 @@ def generate_query(history, new_question, combined_text):
 def main():
     # Initialize components
     train_data = load_data("train.jsonl")
-    MODEL = init_openai("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")
+    MODEL = init_openai(os.getenv("OPENAI_API_KEY"))
     vector_db = InCodeVectorDB()
     create_and_index_embeddings(train_data, MODEL, vector_db)
 
