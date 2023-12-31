@@ -1,4 +1,4 @@
-# AI-Driven-Web-Content-Explorer
+# Upto Date LLM
 
 This project is designed to scrape, process, and analyze web content, delivering contextually relevant responses using OpenAI's GPT-3.5 Turbo model. It automates the collection of web articles based on user queries, processes the content for relevant information, and uses AI to generate insightful answers.
 
