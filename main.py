@@ -77,7 +77,7 @@ def process_question(question, model, vector_db, conversation_history):
 
     # Formulate and send the query to OpenAI
     final_query = generate_query(conversation_history, question, combined_text)
-    response = openai.Completion.create(engine="text-davinci-003", prompt=final_query, max_tokens=500)
+    response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=final_query, max_tokens=500)
     answer = response.choices[0].text.strip()
     print("Response from OpenAI:", answer)
 

@@ -1,48 +1,49 @@
 #!/bin/bash
 
-# Delete the websites directory and train.jsonl file
+echo "Starting cleanup process..."
 ./cleanup.sh
 
-# Run the Python script to retrieve top URLs
+echo "Retrieving top URLs..."
 python3 webscrape.py
 
-# Check if the URL file exists and is not empty
 if [ ! -s urls.txt ]; then
     echo "No URLs found. Exiting."
     exit 1
 fi
 
-# Directory to save the downloaded HTML files
 dir="websites"
 mkdir -p "$dir"
 
-# Change to the directory
-cd "$dir"
+echo "Changing to directory $dir..."
+if cd "$dir"; then
+    MAX_PARALLEL=10  # Maximum number of parallel downloads
+    count=0
 
-# Counter for URLs
-count=0
+    echo "Starting downloads..."
+    while IFS= read -r url; do
+        echo "Downloading $url..."
+        wget -nd -A.html "$url" &
+        ((count++))
 
-# Read URLs from the file and use wget to download each article
-while IFS= read -r url; do
-    echo "Downloading $url..."
-    wget -nd -A.html "$url" &
+        if ((count % MAX_PARALLEL == 0)); then
+            wait
+        fi
+    done < ../urls.txt
 
-    # Increment the counter
-    ((count++))
+    wait
+    echo "Download completed. Check the '$dir' directory."
+else
+    echo "Failed to change directory to $dir. Exiting."
+    exit 1
+fi
 
-    # For every two URLs, wait for the parallel processes to finish
-    if ((count % 2 == 0)); then
-        wait
-    fi
-done < ../urls.txt
-
-# Wait for the last batch of parallel processes to finish
-wait
-
-echo "Download completed. Check the '$dir' directory."
 cd ..
 
-# Run the Python scripts
+echo "Running cleaner script..."
 python3 cleaner.py
+
+echo "Running chunker script..."
 python3 chunker.py
+
+echo "Executing main script..."
 python3 main.py
