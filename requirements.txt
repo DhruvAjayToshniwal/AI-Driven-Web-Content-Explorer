@@ -10,3 +10,4 @@ tiktoken
 langchain
 bs4
 python-dotenv
+Flask
