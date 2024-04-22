@@ -29,7 +29,7 @@ def generate_query(history, new_question, combined_text):
     final_query = f"""You are a helpful AI assistant. Use the following pieces of context to answer the question at the end.
     I will also give you a history of the conversation that the user may have had with you. You could refer to the history and see if the user is asking a follow-up question.
     If you don't know the answer, just say you don't know. DO NOT try to make up an answer.
-    If the question is not related to the context, politely respond that you are tuned to only answer questions that are related to the context. Keep the tone: coversational, and 50% spartan.
+    If the question is not related to the context, politely respond that you are tuned to only answer questions that are related to the context.
 
     Context: {combined_text}
     
