@@ -8,6 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
+            color: #333;
             margin: 0;
             padding: 0;
             display: flex;
@@ -16,8 +17,12 @@
             justify-content: center;
             height: 100vh;
         }
-        h1 {
-            color: #333;
+        .dark-mode {
+            background-color: #333;
+            color: #f4f4f9;
+        }
+        h1, h2, p, input, button, select {
+            transition: all 0.3s ease;
         }
         form {
             width: 300px;
@@ -28,9 +33,9 @@
             display: flex;
             flex-direction: column;
         }
-        input[type="text"] {
+        input[type="text"], input[type="button"], button, select {
             padding: 10px;
-            margin-bottom: 10px;
+            margin: 5px 0;  /* Smaller margin for a tighter layout */
             border: 1px solid #ccc;
             border-radius: 4px;
         }
@@ -38,35 +43,76 @@
             background-color: #5c67f2;
             color: white;
             border: none;
-            padding: 10px;
             cursor: pointer;
             border-radius: 4px;
-            transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #5058e5;
         }
-        h2, p {
-            text-align: center;
-            width: 300px;
-            margin-top: 20px;
+        #dark-mode-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            border: none;
+            background-color: #5c67f2;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
         }
-        p {
-            color: #666;
-            border-left: 4px solid #5c67f2;
-            padding-left: 10px;
+        #model-select {
+            display: block;
         }
     </style>
 </head>
 <body>
+    <button id="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode</button>
     <h1>mini-Perplexity</h1>
-    <form method="POST" action="/process">
-        <input type="text" name="query" required placeholder="Type your query here...">
-        <button type="submit">Submit</button>
+    <form id="labnol" method="POST" action="/process">
+        <select id="model-select" name="model">
+            <option value="openai">OpenAI</option>
+            <option value="llama3">Llama3</option>
+        </select>
+        <input type="text" id="transcript" name="query" placeholder="Speak" required>
+        <div style="display:flex; justify-content:space-between;">
+            <input type="button" value="Speak" onclick="startDictation()">
+            <button type="submit">Submit</button>
+        </div>
     </form>
     {% if answer %}
     <h2>Query: {{ query }}</h2>
     <p>Answer: {{ answer }}</p>
     {% endif %}
+    <script>
+        function toggleDarkMode() {
+                var body = document.body;
+                body.classList.toggle("dark-mode");
+                localStorage.setItem('darkMode', body.classList.contains('dark-mode'));  // Save the dark mode state in local storage
+            }
+
+            // Check local storage to maintain consistency across sessions/pages
+            document.addEventListener('DOMContentLoaded', (event) => {
+                if (localStorage.getItem('darkMode') === 'true') {
+                    document.body.classList.add('dark-mode');
+                }
+            });
+        function startDictation() {
+            if (window.hasOwnProperty('webkitSpeechRecognition')) {
+                var recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = "en-US";
+                recognition.start();
+                recognition.onresult = function(e) {
+                    document.getElementById('transcript').value = e.results[0][0].transcript;
+                    recognition.stop();
+                    document.getElementById('labnol').submit();
+                };
+                recognition.onerror = function(e) {
+                    recognition.stop();
+                }
+            }
+        }
+    </script>
 </body>
 </html>

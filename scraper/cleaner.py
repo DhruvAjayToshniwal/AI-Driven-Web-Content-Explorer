@@ -2,7 +2,6 @@ import os
 import multiprocessing
 from bs4 import BeautifulSoup
 import chardet
-import shutil
 
 def get_unique_filename(output_file_path, output_dir):
     filename = os.path.basename(output_file_path)
@@ -39,7 +38,7 @@ def process_directory_parallel(dir_path, output_dir):
 
 if __name__ == "__main__":
     dir_path = "websites"
-    output_dir = "cleaned_websites"  # Separate output directory
+    output_dir = "cleaned_websites"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     process_directory_parallel(dir_path, output_dir)

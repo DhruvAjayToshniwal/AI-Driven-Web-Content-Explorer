@@ -15,10 +15,8 @@ class InCodeVectorDB:
         vectors = np.array(self.vectors)
         query_vector = np.array(query_vector)
 
-        # Calculate Euclidean distances
         distances = np.linalg.norm(vectors - query_vector, axis=1)
 
-        # Find the indices of the smallest distances
         nearest_indices = np.argsort(distances)[:top_k]
 
         return [(self.ids[i], distances[i]) for i in nearest_indices]
@@ -33,12 +31,10 @@ def load_data(file_path):
         print(f"Error loading data: {e}")
     return data
 
-# Initialize OpenAI API
 def init_openai(api_key):
     openai.api_key = api_key
     return "text-embedding-ada-002"
 
-# Create embeddings and populate the in-code database
 def create_and_index_embeddings(data, model, db):
     if not data:
         print("No data to process for embeddings.")
@@ -52,7 +48,6 @@ def create_and_index_embeddings(data, model, db):
         except Exception as e:
             print(f"Failed to create embedding for {text}: {e}")
 
-# Function to vectorize a single input query
 def vectorize_input(query, model):
     res = openai.Embedding.create(input=query, engine=model)
     return res["data"][0]["embedding"]

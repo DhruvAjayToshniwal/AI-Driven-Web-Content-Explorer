@@ -8,6 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
+            color: #333;
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -22,11 +23,40 @@
             padding: 10px;
             border-left: 4px solid #5c67f2;
         }
+        a {
+            color: #5c67f2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .dark-mode {
+            background-color: #333;
+            color: #f4f4f9;
+        }
+        .dark-mode h1, .dark-mode p {
+            color: #f4f4f9;
+        }
+        .dark-mode a {
+            color: #9fa8da;
+        }
+        .dark-mode a:hover {
+            color: #c5cae9;
+        }
     </style>
 </head>
 <body>
     <h1>Results for: {{ query }}</h1>
     <p>{{ answer }}</p>
     <a href="/">Try another query</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
 </body>
 </html>

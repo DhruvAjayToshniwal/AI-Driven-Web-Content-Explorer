@@ -7,40 +7,42 @@ import requests
 app = Flask(__name__)
 
 def download_html_files(urls_file, output_dir):
-    """Download HTML for each URL listed in the given file."""
     with open(urls_file, 'r') as file:
         urls = file.readlines()
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     for i, url in enumerate(urls):
         url = url.strip()
-        try:
-            print(f"Downloading {url}...")
-            response = requests.get(url)
-            file_path = os.path.join(output_dir, f"document_{i}.html")
-            with open(file_path, 'w', encoding='utf-8') as f:
-                f.write(response.text)
-            print(f"Saved {file_path}")
-        except requests.RequestException as e:
-            print(f"Error downloading {url}: {e}")
-
+        if not any(x in url for x in ["youtube.com", "maps.google.com"]) and not url.endswith(('.jpg', '.jpeg', '.png', '.gif')):
+            try:
+                print(f"Downloading {url}...")
+                response = requests.get(url)
+                file_path = os.path.join(output_dir, f"document_{i}.html")
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(response.text)
+                print(f"Saved {file_path}")
+            except requests.RequestException as e:
+                print(f"Error downloading {url}: {e}")
+            
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
         query = request.form['query']
-        print(f"Received query from form: {query}")  # Debug statement
-        return redirect(url_for('start_process', query=query))
+        model = request.form['model']
+        print(f"Received query from form: {query}, Model: {model}")
+        return redirect(url_for('start_process', query=query, model=model))
     return render_template('index.html')
 
 @app.route('/process', methods=['POST'])
 def start_process():
-    query = request.form['query']  # Get the query from form data
+    query = request.form['query']
+    model = request.form['model']
     print(f"Starting process for query: {query}")
     try:
         subprocess.run(['cleanup.bat'], shell=True, check=True)
         print("Cleanup completed.")
 
-        subprocess.run(['python', 'scraper/webscrape.py', query], shell=True, check=True)
+        subprocess.run(['python', 'scraper/webscrape.py', query, model], shell=True, check=True)
         print("Webscraping completed.")
 
         if not os.path.exists('websites'):
@@ -49,7 +51,6 @@ def start_process():
             print("No URLs found.")
             return "No URLs found, exiting."
 
-        # Download HTML files based on URLs
         download_html_files('urls.txt', 'websites')
 
         subprocess.run(['python', 'scraper/cleaner.py'], shell=True, check=True)
@@ -73,4 +74,4 @@ def start_process():
         return f"An error occurred: {e}. Process stopped."
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
